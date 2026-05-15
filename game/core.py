@@ -20,6 +20,10 @@ from game.utils.vars import (
 pygame.init()
 pygame.mixer.init()
 
+pygame.mixer.music.load(SOUNDS_PATH + "py_tetris_sound_track.ogg")
+pygame.mixer.music.set_volume(0.3)
+pygame.mixer.music.play(-1)
+
 game_over_image = pygame.transform.scale(
         pygame.image.load(IMAGES_PATH + "game_over.png"), 
         (160, 160))
@@ -37,6 +41,7 @@ pygame.display.set_caption("Py Tetris - premiss.io")
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Arial", 28)
 
+piece_bag = []
 
 class Piece:
     def __init__(self, shape_index=None):
@@ -238,6 +243,7 @@ def main():
             if event.type == pygame.KEYDOWN:
 
                 if event.key == pygame.K_r:
+                    pygame.mixer.music.play(-1)
                     grid, current_piece, next_piece, score, game_over = reset_game()
 
                 if not game_over:
@@ -284,6 +290,7 @@ def main():
 
                 if not valid_position(current_piece, grid):
                     game_over = True
+                    pygame.mixer.music.fadeout(2000)
                     gameover_sound.play()
 
         draw_grid(grid)
@@ -291,7 +298,7 @@ def main():
         if not game_over:
             current_piece.draw_ghost(grid)
             current_piece.draw()
-            current_piece.draw_next()
+            next_piece.draw_next()
 
         draw_text(score, game_over)
 
